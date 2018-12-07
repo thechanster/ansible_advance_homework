@@ -4,7 +4,7 @@
   tasks:
   - name: Install required packages 
     yum: 
-     name: "python python-pip python-devel gcc"
+     name: "python,python-pip,python-devel,gcc"
      state: latest 
 
   - name: Install tower-cli
