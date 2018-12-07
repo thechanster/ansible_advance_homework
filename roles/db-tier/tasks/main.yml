@@ -1,2 +1,22 @@
 ---
 # tasks file for db-tier
+
+- name: Install postgresql
+  yum:
+    name: postgresql-server
+    state: latest
+
+- name: Check if PostgreSQL database is initialized.
+  stat:
+    path: /var/lib/pgsql/data/PG_VERSION
+  register: pgdata_dir_version
+
+- name: Initialize PostgreSQL database if not already
+  command: "postgresql-setup initdb"
+  when: not pgdata_dir_version.stat.exists
+
+- name: Postgresql - start and enable service
+  service:
+    name: postgresql.service
+    state: restarted
+    enabled: yes
