@@ -4,13 +4,8 @@
   tasks:
   - name: Install required packages 
     yum: 
-     name: "{{item}}"
+     name: "python python-pip python-devel gcc"
      state: latest 
-    loop: 
-      - python 
-      - python-pip 
-      - python-devel 
-      - gcc
 
   - name: Install tower-cli
     pip:
@@ -33,28 +28,33 @@
       ssh_key_data: "/root/.ssh/{{ file_to_copy.stdout }}"
       username: ec2-user
 
-  - name: Update Prod Job template
-    tower_job_template:
-      name: "3 tier app on Prod"
-      machine_credential: "Creds for AWS instances"
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
-      tower_username: admin
-      tower_password: r3dh4t1!
-      state: present
-      job_type: run
-      playbook: site-3tier-app.yml
-      project: "Homework Assignment"
+  # - name: Update Prod Job template
+  #   tower_job_template:
+  #     name: "3 tier app on Prod"
+  #     machine_credential: "Creds for AWS instances"
+  #     tower_host: tower1.{{tower_guid}}.example.opentlc.com
+  #     tower_username: admin
+  #     tower_password: r3dh4t1!
+  #     state: present
+  #     job_type: run
+  #     playbook: site-3tier-app.yml
+  #     project: "Homework Assignment"
       
-  - name: Update Prod Smoke Job template
-    tower_job_template:
-      name: "Smoke test Prod env"
-      machine_credential: "Creds for AWS instances"
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
-      tower_username: admin
-      tower_password: r3dh4t1!
-      state: present
-      job_type: run
-      playbook: site-smoketest-aws.yml
-      project: "Homework Assignment"
+  # - name: Update Prod Smoke Job template
+  #   tower_job_template:
+  #     name: "Smoke test Prod env"
+  #     machine_credential: "Creds for AWS instances"
+  #     tower_host: tower1.{{tower_guid}}.example.opentlc.com
+  #     tower_username: admin
+  #     tower_password: r3dh4t1!
+  #     state: present
+  #     job_type: run
+  #     playbook: site-smoketest-aws.yml
+  #     project: "Homework Assignment"
 
+  - name: Update Prod Job template
+    command: tower-cli job_template modify --project="Homework Assignment" --credential="Creds for AWS instances" -n "3 tier app on Prod" -p "r3dh4t1!" -u admin -h "tower1.{{tower_guid}}.example.opentlc.com"
+
+  - name: Update Prod Smoke Job template
+    command: tower-cli job_template modify --project="Homework Assignment" --credential="Creds for AWS instances" -n "Smoke test Prod env" -p "r3dh4t1!" -u admin -h "tower1.{{tower_guid}}.example.opentlc.com"
     
