@@ -21,7 +21,7 @@
 
   - name: debug curl output
     debug: 
-      msg: webpage
+      msg: "{{ webpage }}"
 
   - name: Fail if 'Ansible has done its job' is not in the page content
     fail:
